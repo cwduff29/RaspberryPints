@@ -37,7 +37,7 @@
 					    $refer = $_SERVER['HTTP_REFERER'];
 					}
 					if( null !== $refer ){?>
-					<input type="hidden" name="jumpto" value="<?php echo $refer;?>"/>
+					<input type="hidden" name="jumpto" value="<?php echo htmlspecialchars($refer, ENT_QUOTES);?>"/>
 					<?php }?>
 					<input type="submit" class="loginbtn" value="Log In" /><br />
 					<img src="img/lock.png" height="50" width="50">

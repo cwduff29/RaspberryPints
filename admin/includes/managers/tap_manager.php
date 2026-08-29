@@ -90,7 +90,7 @@ class TapManager extends Manager{
 	    if($tap->get_kegId())$this->closeTap($tap, false);
 		if($tap->get_kegId() != $kegId){
     		$tap->set_kegId($kegId);
-    		$sql="UPDATE taps SET kegId = $kegId, modifiedDate = NOW() WHERE id = ".$tap->get_id();
+    		$sql="UPDATE taps SET kegId = ".(int)$kegId.", modifiedDate = NOW() WHERE id = ".(int)$tap->get_id();
     		$ret = $this->executeQueryNoResult($sql);
     		if(!$ret)return false;
 		}
@@ -155,60 +155,65 @@ class TapManager extends Manager{
 	}
 
 	function enableTap($id){
-		$sql="UPDATE tapconfig SET valveOn = 1 WHERE tapId = $id";
+		$sql="UPDATE tapconfig SET valveOn = 1 WHERE tapId = ".(int)$id;
 		return $this->executeQueryNoResult($sql);
 	}
-	
+
 	function disableTap($id){
-		$sql="UPDATE tapconfig SET valveOn = 0 WHERE tapId = $id";
+		$sql="UPDATE tapconfig SET valveOn = 0 WHERE tapId = ".(int)$id;
 		return $this->executeQueryNoResult($sql);
 	}
-	
+
 	function saveTapConfig($id, $flowPin, $valvePin, $valveOn, $countpergallon, $countpergallonunit, $plaatoAuthToken) {
+		global $mysqli;
 		$ret = true;
+		$id = (int) $id;
 		$sql="SELECT * FROM tapconfig where tapId = $id";
 		$tap = $this->executeQueryWithSingleResult($sql);
 		unset($sql);
 		$updateSql = "";
 		if( $tap ){
-			if($tap->get_flowPinId() != $flowPin) 		$updateSql .= ($updateSql!=""?",":"")."flowPin = NULLIF('" . $flowPin . "', '')";
-			if($tap->get_valvePinId() != $valvePin) 	$updateSql .= ($updateSql!=""?",":"")."valvePin = NULLIF('" . $valvePin . "', '')"; 
-			if($tap->get_valveOn() != $valveOn) 		$updateSql .= ($updateSql!=""?",":"")."valveOn = NULLIF('" . $valveOn . "', '')"; 
-			if($tap->get_count() != $countpergallon) 	$updateSql .= ($updateSql!=""?",":"")."count = NULLIF('" . $countpergallon . "', '')";
-			if($tap->get_countUnit() != $countpergallonunit) 	$updateSql .= ($updateSql!=""?",":"")."countUnit = NULLIF('" . $countpergallonunit . "', '')";
-			if($tap->get_plaatoAuthToken() != $plaatoAuthToken) $updateSql .= ($updateSql!=""?",":"")."plaatoAuthToken = NULLIF('" . $plaatoAuthToken . "', '')";
+			if($tap->get_flowPinId() != $flowPin) 		$updateSql .= ($updateSql!=""?",":"")."flowPin = NULLIF('" . $mysqli->real_escape_string($flowPin) . "', '')";
+			if($tap->get_valvePinId() != $valvePin) 	$updateSql .= ($updateSql!=""?",":"")."valvePin = NULLIF('" . $mysqli->real_escape_string($valvePin) . "', '')";
+			if($tap->get_valveOn() != $valveOn) 		$updateSql .= ($updateSql!=""?",":"")."valveOn = NULLIF('" . $mysqli->real_escape_string($valveOn) . "', '')";
+			if($tap->get_count() != $countpergallon) 	$updateSql .= ($updateSql!=""?",":"")."count = NULLIF('" . $mysqli->real_escape_string($countpergallon) . "', '')";
+			if($tap->get_countUnit() != $countpergallonunit) 	$updateSql .= ($updateSql!=""?",":"")."countUnit = NULLIF('" . $mysqli->real_escape_string($countpergallonunit) . "', '')";
+			if($tap->get_plaatoAuthToken() != $plaatoAuthToken) $updateSql .= ($updateSql!=""?",":"")."plaatoAuthToken = NULLIF('" . $mysqli->real_escape_string($plaatoAuthToken) . "', '')";
 			if($updateSql != "")$sql = "UPDATE tapconfig SET ".$updateSql." WHERE tapId = " . $id;
 		} else {
-			$sql = "INSERT INTO tapconfig (tapId, flowPin, valvePin, valveOn, count, countUnit, plaatoAuthToken) VALUES(" . 
-			 			$id.", ".$flowPin.", ".$valvePin. ", ".$valveOn.", ".$countpergallon.", '".$countpergallonunit."','".$plaatoAuthToken."')";
+			$sql = "INSERT INTO tapconfig (tapId, flowPin, valvePin, valveOn, count, countUnit, plaatoAuthToken) VALUES(" .
+			 			$id.", '".$mysqli->real_escape_string($flowPin)."', '".$mysqli->real_escape_string($valvePin)."', '".$mysqli->real_escape_string($valveOn)."', '".$mysqli->real_escape_string($countpergallon)."', '".$mysqli->real_escape_string($countpergallonunit)."','".$mysqli->real_escape_string($plaatoAuthToken)."')";
 		}
 		if(isset($sql) && $sql != "")$ret = $ret && $this->executeQueryNoResult($sql);
 		return $ret;
 	}
 	
 	function saveTapLoadCellInfo($id, $loadCellCmdPin, $loadCellRspPin, $loadCellScaleRatio, $loadCellTareOffset, $loadCellUnit, $loadCellUpdateVariance) {
+	    global $mysqli;
 	    $ret = true;
+	    $id = (int) $id;
 	    $sql="SELECT * FROM tapconfig where tapId = $id";
 	    $tap = $this->executeQueryWithSingleResult($sql);
 	    unset($sql);
 	    $updateSql = "";
 	    if( $tap ){
-	        if($tap->get_loadCellCmdPin() != $loadCellCmdPin) $updateSql .= ($updateSql!=""?",":"")."loadCellCmdPin = NULLIF('" . $loadCellCmdPin . "', '')";
-	        if($tap->get_loadCellRspPin() != $loadCellRspPin) $updateSql .= ($updateSql!=""?",":"")."loadCellRspPin = NULLIF('" . $loadCellRspPin . "', '')";
-	        if($tap->get_loadCellScaleRatio() != $loadCellScaleRatio) $updateSql .= ($updateSql!=""?",":"")."loadCellScaleRatio = NULLIF('" . $loadCellScaleRatio . "', '')";
-	        if($tap->get_loadCellTareOffset() != $loadCellTareOffset) $updateSql .= ($updateSql!=""?",":"")."loadCellTareOffset = NULLIF('" . $loadCellTareOffset . "', '')";
-	        if($tap->get_loadCellUnit() != $loadCellUnit) $updateSql .= ($updateSql!=""?",":"")."loadCellUnit = NULLIF('" . $loadCellUnit . "', '')";
-	        if($tap->get_loadCellUpdateVariance() != $loadCellUpdateVariance) $updateSql .= ($updateSql!=""?",":"")."loadCellUpdateVariance = NULLIF('" . $loadCellUpdateVariance . "', '')";
+	        if($tap->get_loadCellCmdPin() != $loadCellCmdPin) $updateSql .= ($updateSql!=""?",":"")."loadCellCmdPin = NULLIF('" . $mysqli->real_escape_string($loadCellCmdPin) . "', '')";
+	        if($tap->get_loadCellRspPin() != $loadCellRspPin) $updateSql .= ($updateSql!=""?",":"")."loadCellRspPin = NULLIF('" . $mysqli->real_escape_string($loadCellRspPin) . "', '')";
+	        if($tap->get_loadCellScaleRatio() != $loadCellScaleRatio) $updateSql .= ($updateSql!=""?",":"")."loadCellScaleRatio = NULLIF('" . $mysqli->real_escape_string($loadCellScaleRatio) . "', '')";
+	        if($tap->get_loadCellTareOffset() != $loadCellTareOffset) $updateSql .= ($updateSql!=""?",":"")."loadCellTareOffset = NULLIF('" . $mysqli->real_escape_string($loadCellTareOffset) . "', '')";
+	        if($tap->get_loadCellUnit() != $loadCellUnit) $updateSql .= ($updateSql!=""?",":"")."loadCellUnit = NULLIF('" . $mysqli->real_escape_string($loadCellUnit) . "', '')";
+	        if($tap->get_loadCellUpdateVariance() != $loadCellUpdateVariance) $updateSql .= ($updateSql!=""?",":"")."loadCellUpdateVariance = NULLIF('" . $mysqli->real_escape_string($loadCellUpdateVariance) . "', '')";
 	        if($updateSql != "")$sql = "UPDATE tapconfig SET ".$updateSql." WHERE tapId = " . $id;
 	    } else {
 	        $sql = "INSERT INTO tapconfig (tapId, loadCellCmdPin, loadCellRspPin, loadCellScaleRatio, loadCellTareOffset, loadCellUnit, loadCellUpdateVariance) VALUES(" .
-	   	        $id.", ".$loadCellCmdPin.", ".$loadCellRspPin.", ".$loadCellScaleRatio.", ".$loadCellTareOffset.", '".$loadCellUnit."', '". $loadCellUpdateVariance. "' )";
+	   	        $id.", '".$mysqli->real_escape_string($loadCellCmdPin)."', '".$mysqli->real_escape_string($loadCellRspPin)."', '".$mysqli->real_escape_string($loadCellScaleRatio)."', '".$mysqli->real_escape_string($loadCellTareOffset)."', '".$mysqli->real_escape_string($loadCellUnit)."', '". $mysqli->real_escape_string($loadCellUpdateVariance). "' )";
 	    }
 	    if(isset($sql) && $sql != "")$ret = $ret && $this->executeQueryNoResult($sql);
 	    return $ret;
 	}
 	function set_tapTareRequested($id, $tare) {
 	    $ret = true;
+	    $id = (int) $id;
 	    $sql="SELECT * FROM tapconfig where tapId = $id";
 	    $tap = $this->executeQueryWithSingleResult($sql);
 	    unset($sql);

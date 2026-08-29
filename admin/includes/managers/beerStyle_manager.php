@@ -20,17 +20,19 @@ class BeerStyleManager extends Manager{
 		return "active";
 	}	
 	function GetAllByList($list){
-		$sql="SELECT * FROM beerStyles WHERE beerStyleList = '$list' ORDER BY name";
+		global $mysqli;
+		$sql="SELECT * FROM beerStyles WHERE beerStyleList = '".$mysqli->real_escape_string($list)."' ORDER BY name";
 		return $this->executeQueryWithResults($sql);
 	}
-	
+
 	function GetBeerStyleList(){
 		$sql="SELECT DISTINCT beerStyleList FROM beerStyles ORDER BY beerStyleList";
 		return $this->executeNonObjectQueryWithSingleResults($sql);
 	}
-	
+
 	function GetFirstByName($name){
-	    $sql="SELECT * FROM beerStyles WHERE name = '$name' ORDER BY beerStyleList";
+	    global $mysqli;
+	    $sql="SELECT * FROM beerStyles WHERE name = '".$mysqli->real_escape_string($name)."' ORDER BY beerStyleList";
 	    return $this->executeQueryWithSingleResult($sql);
 	}
 	function GetDistinctNamesFromPours(){
@@ -38,33 +40,40 @@ class BeerStyleManager extends Manager{
 	    return $this->executeQueryWithResults($sql);
 	}
 	function GetByNameOrCatNum($styleName, $catNum){
+        global $mysqli;
+        $styleName = $mysqli->real_escape_string($styleName);
+        $catNum = $mysqli->real_escape_string($catNum);
         $sql = "SELECT id from beerStyles where name='" . $styleName . "' and catNum='" . $catNum . "';";
         $style = $this->executeQueryWithSingleResult($sql);
         if ($style) return $style;
-        
+
         $sql = "SELECT id from beerStyles where name='" . $styleName . "';";
         $style = $this->executeQueryWithSingleResult($sql);
         if ($style) return $style;
-        
+
         $sql = "SELECT id from beerStyles where catNum='" . $catNum . "';";
         $style = $this->executeQueryWithSingleResult($sql);
         if ($style) return $style;
-        
+
         return null;
 	}
 	function GetByNameOrCatNumInList($styleName, $catNum, $list){
+	    global $mysqli;
+	    $styleName = $mysqli->real_escape_string($styleName);
+	    $catNum = $mysqli->real_escape_string($catNum);
+	    $list = $mysqli->real_escape_string($list);
 	    $sql = "SELECT id from beerStyles where name='$styleName' and catNum='$catNum' AND beerStyleList='$list';";
 	    $style = $this->executeQueryWithSingleResult($sql);
 	    if ($style) return $style;
-	    
+
 	    $sql = "SELECT id from beerStyles where name='$styleName' AND beerStyleList='$list';";
 	    $style = $this->executeQueryWithSingleResult($sql);
 	    if ($style) return $style;
-	    
+
 	    $sql = "SELECT id from beerStyles where catNum='$catNum' AND beerStyleList='$list';";
 	    $style = $this->executeQueryWithSingleResult($sql);
 	    if ($style) return $style;
-	    
+
 	    return null;
 	}
 }

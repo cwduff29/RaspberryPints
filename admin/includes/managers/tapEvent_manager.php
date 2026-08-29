@@ -30,14 +30,15 @@ class TapEventManager extends Manager{
 	function getTapEventsFiltered($page, $limit, &$totalRows, $groupBy, $startTime, $endTime, $tapId, $beerId, $beerBatchId, $userId, $kegId){
 	    $sql="SELECT * ";
 	    $sql = $sql."FROM ".$this->getViewName()." ";
+	    global $mysqli;
 	    $where = "";
-	    if($startTime && $startTime != "") $where = $where.($where != ""?"AND ":"")."createdDate >= '$startTime' ";
-	    if($endTime && $endTime != "") $where = $where.($where != ""?"AND ":"")."createdDate < '$endTime' ";
-	    if($tapId)  $where = $where.($where != ""?"AND ":"")."tapId = $tapId ";
-	    if($beerId) $where = $where.($where != ""?"AND ":"")."beerId = $beerId ";
-	    if($beerBatchId && $beerBatchId > 0) $where = $where.($where != ""?"AND ":"")."beerBatchId = $beerBatchId ";
-	    if($userId) $where = $where.($where != ""?"AND ":"")."userId = $userId ";
-	    if($kegId)  $where = $where.($where != ""?"AND ":"")."kegId = '$kegId' ";
+	    if($startTime && $startTime != "") $where = $where.($where != ""?"AND ":"")."createdDate >= '".$mysqli->real_escape_string($startTime)."' ";
+	    if($endTime && $endTime != "") $where = $where.($where != ""?"AND ":"")."createdDate < '".$mysqli->real_escape_string($endTime)."' ";
+	    if($tapId)  $where = $where.($where != ""?"AND ":"")."tapId = ".(int)$tapId." ";
+	    if($beerId) $where = $where.($where != ""?"AND ":"")."beerId = ".(int)$beerId." ";
+	    if($beerBatchId && $beerBatchId > 0) $where = $where.($where != ""?"AND ":"")."beerBatchId = ".(int)$beerBatchId." ";
+	    if($userId) $where = $where.($where != ""?"AND ":"")."userId = ".(int)$userId." ";
+	    if($kegId)  $where = $where.($where != ""?"AND ":"")."kegId = ".(int)$kegId." ";
 	    if($where != "") $sql = $sql."WHERE $where ";
 	    $totalRows = 0;
 	    $results = $this->executeQueryWithResults($sql);

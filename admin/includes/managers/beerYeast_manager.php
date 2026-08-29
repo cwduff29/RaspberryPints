@@ -21,12 +21,12 @@ class BeerYeastManager extends Manager{
     
     function GetAllByBeerId($beerId){
         if(null === $beerId)return array();
-        $sql="SELECT * FROM ".$this->getViewName()." WHERE beerId = ".$beerId;
+        $sql="SELECT * FROM ".$this->getViewName()." WHERE beerId = ".(int)$beerId;
         return $this->executeQueryWithResults($sql);
     }
     function DeleteAllByBeerId($beerId){
         if(null === $beerId)return array();
-        $sql="DELETE FROM ".$this->getViewName()." WHERE beerId = ".$beerId;
+        $sql="DELETE FROM ".$this->getViewName()." WHERE beerId = ".(int)$beerId;
         return $this->executeQueryNoResult($sql);
     }
 }

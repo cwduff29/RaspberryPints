@@ -20,17 +20,17 @@ class BeerBatchYeastManager extends Manager{
     
     function GetAllByBeerBatchId($beerBatchId){
         if(null === $beerBatchId)return array();
-        $sql="SELECT * FROM ".$this->getViewName()." WHERE beerBatchId = ".$beerBatchId;
+        $sql="SELECT * FROM ".$this->getViewName()." WHERE beerBatchId = ".(int)$beerBatchId;
         return $this->executeQueryWithResults($sql);
     }
     function DeleteAllByBeerBatchId($beerBatchId){
         if(null === $beerBatchId)return array();
-        $sql="DELETE FROM ".$this->getViewName()." WHERE beerBatchId = ".$beerBatchId;
+        $sql="DELETE FROM ".$this->getViewName()." WHERE beerBatchId = ".(int)$beerBatchId;
         return $this->executeQueryNoResult($sql);
     }
     function GetDistinctForBeerBatch($beerBatchId){
         if(null === $beerBatchId)return array();
-        $sql="SELECT DISTINCT * FROM ".$this->getViewName()." WHERE beerBatchId = ".$beerBatchId;
+        $sql="SELECT DISTINCT * FROM ".$this->getViewName()." WHERE beerBatchId = ".(int)$beerBatchId;
         return $this->executeQueryWithResults($sql);
     }
 }

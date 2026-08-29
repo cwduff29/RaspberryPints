@@ -31,10 +31,11 @@ class TempLogManager extends Manager{
 	
 	function getLastTempsFiltered($page, $limit, &$totalRows, $startTime, $endTime, $probe){
 	    $sql="SELECT * FROM ".$this->getViewName()." ";
+	    global $mysqli;
 	    $where = "";
-	    if($startTime && $startTime != "" && $startTime != " ") $where = $where.($where != ""?"AND ":"")."takenDate >= '$startTime' ";
-	    if($endTime && $endTime != "" && $endTime != " ") $where = $where.($where != ""?"AND ":"")."takenDate < '$endTime' ";
-	    if($probe)  $where = $where.($where != ""?"AND ":"")."probe = '$probe' ";
+	    if($startTime && $startTime != "" && $startTime != " ") $where = $where.($where != ""?"AND ":"")."takenDate >= '".$mysqli->real_escape_string($startTime)."' ";
+	    if($endTime && $endTime != "" && $endTime != " ") $where = $where.($where != ""?"AND ":"")."takenDate < '".$mysqli->real_escape_string($endTime)."' ";
+	    if($probe)  $where = $where.($where != ""?"AND ":"")."probe = '".$mysqli->real_escape_string($probe)."' ";
 	    if($where != "") $sql = $sql."WHERE $where ";
 	    $sql = $sql."ORDER BY takenDate ASC ";
 	    $totalRows = 0;

@@ -29,10 +29,10 @@ class iSpindelDeviceManager extends Manager{
 	}
 	function GetTopWithBeer($id, $batchId=null){
 	    if( !$batchId ){
-	        $sql="SELECT * FROM ".$this->getViewName()." t WHERE beerBatchId = $batchId";	        
+	        $sql="SELECT * FROM ".$this->getViewName()." t WHERE beerBatchId = ".(int)$batchId;
 	    }
 	    else {
-	       $sql="SELECT * FROM ".$this->getViewName()." t WHERE beerId = $id";
+	       $sql="SELECT * FROM ".$this->getViewName()." t WHERE beerId = ".(int)$id;
 	    }
 	    return $this->executeQueryWithSingleResult($sql);
 	}

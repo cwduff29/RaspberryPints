@@ -8,10 +8,10 @@ if (isset($_POST['email'])) {
     
     // Get values from form
     $email = encode($_POST['email']);
-    
+
     // update data in mysql database
-    $sql = "SELECT username FROM users WHERE email='$email'";
     /** @var mixed $mysqli **/
+    $sql = "SELECT username FROM users WHERE email='".$mysqli->real_escape_string($email)."'";
     $result = $mysqli->query($sql);
     $username = $result->fetch_row();
     ?>

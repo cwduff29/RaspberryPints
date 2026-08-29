@@ -20,11 +20,12 @@ class iSpindelDataManager extends Manager{
     
     
     function getLastDataFiltered($page, $limit, &$totalRows, $startTime, $endTime, $device, $hasBeerOnly){
+        global $mysqli;
         $sql="SELECT dat.*, d.name FROM ".$this->getViewName()." dat LEFT JOIN iSpindel_Device d ON dat.iSpindelId = d.iSpindelId ";
         $where = "";
-        if($startTime && $startTime != "" && $startTime != " ") $where = $where.($where != ""?"AND ":"")."dat.createdDate >= '$startTime' ";
-        if($endTime && $endTime != "" && $endTime != " ") $where = $where.($where != ""?"AND ":"")."dat.createdDate < '$endTime' ";
-        if($device)  $where = $where.($where != ""?"AND ":"")."d.name = '$device' ";
+        if($startTime && $startTime != "" && $startTime != " ") $where = $where.($where != ""?"AND ":"")."dat.createdDate >= '".$mysqli->real_escape_string($startTime)."' ";
+        if($endTime && $endTime != "" && $endTime != " ") $where = $where.($where != ""?"AND ":"")."dat.createdDate < '".$mysqli->real_escape_string($endTime)."' ";
+        if($device)  $where = $where.($where != ""?"AND ":"")."d.name = '".$mysqli->real_escape_string($device)."' ";
         if($hasBeerOnly)  $where = $where.($where != ""?"AND ":"")."dat.beerId IS NOT NULL ";
         if($where != "") $sql = $sql."WHERE $where ";
         $sql = $sql."ORDER BY dat.createdDate ASC ";

@@ -20,12 +20,12 @@ class BeerBatchDateManager extends Manager{
     
     function GetAllByBeerBatchId($beerBatchId){
         if(null === $beerBatchId)return array();
-        $sql="SELECT * FROM ".$this->getViewName()." WHERE beerId = ".$beerBatchId;
+        $sql="SELECT * FROM ".$this->getViewName()." WHERE beerId = ".(int)$beerBatchId;
         return $this->executeQueryWithResults($sql);
     }
     function DeleteAllByBeerBatchId($beerBatchId){
         if(null === $beerBatchId)return array();
-        $sql="DELETE FROM ".$this->getViewName()." WHERE beerId = ".$beerBatchId;
+        $sql="DELETE FROM ".$this->getViewName()." WHERE beerId = ".(int)$beerBatchId;
         return $this->executeQueryNoResult($sql);
     }
 }

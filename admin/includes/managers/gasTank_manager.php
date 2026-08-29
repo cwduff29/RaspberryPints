@@ -26,26 +26,29 @@ class GasTankManager extends Manager{
 	    return "vwGasTanks";
 	}
 	function saveGasTankLoadCellInfo($id, $loadCellCmdPin, $loadCellRspPin, $loadCellScaleRatio, $loadCellTareOffset, $loadCellUnit, $loadCellUpdateVariance) {
+	    global $mysqli;
 	    $ret = true;
+	    $id = (int) $id;
 	    $gasTank = $this->GetByID($id);
 	    $updateSql = "";
 	    if( $gasTank ){
-	        if($gasTank->get_loadCellCmdPin() != $loadCellCmdPin) $updateSql .= ($updateSql!=""?",":"")."loadCellCmdPin = NULLIF('" . $loadCellCmdPin . "', '')";
-	        if($gasTank->get_loadCellRspPin() != $loadCellRspPin) $updateSql .= ($updateSql!=""?",":"")."loadCellRspPin = NULLIF('" . $loadCellRspPin . "', '')";
-	        if($gasTank->get_loadCellScaleRatio() != $loadCellScaleRatio) $updateSql .= ($updateSql!=""?",":"")."loadCellScaleRatio = NULLIF('" . $loadCellScaleRatio . "', '')";
-	        if($gasTank->get_loadCellTareOffset() != $loadCellTareOffset) $updateSql .= ($updateSql!=""?",":"")."loadCellTareOffset = NULLIF('" . $loadCellTareOffset . "', '')";
-	        if($gasTank->get_loadCellUnit() != $loadCellUnit) $updateSql .= ($updateSql!=""?",":"")."loadCellUnit = NULLIF('" . $loadCellUnit . "', '')";
-	        if($gasTank->get_loadCellUpdateVariance() != $loadCellUpdateVariance) $updateSql .= ($updateSql!=""?",":"")."loadCellUpdateVariance = NULLIF('" . $loadCellUpdateVariance . "', '')";
+	        if($gasTank->get_loadCellCmdPin() != $loadCellCmdPin) $updateSql .= ($updateSql!=""?",":"")."loadCellCmdPin = NULLIF('" . $mysqli->real_escape_string($loadCellCmdPin) . "', '')";
+	        if($gasTank->get_loadCellRspPin() != $loadCellRspPin) $updateSql .= ($updateSql!=""?",":"")."loadCellRspPin = NULLIF('" . $mysqli->real_escape_string($loadCellRspPin) . "', '')";
+	        if($gasTank->get_loadCellScaleRatio() != $loadCellScaleRatio) $updateSql .= ($updateSql!=""?",":"")."loadCellScaleRatio = NULLIF('" . $mysqli->real_escape_string($loadCellScaleRatio) . "', '')";
+	        if($gasTank->get_loadCellTareOffset() != $loadCellTareOffset) $updateSql .= ($updateSql!=""?",":"")."loadCellTareOffset = NULLIF('" . $mysqli->real_escape_string($loadCellTareOffset) . "', '')";
+	        if($gasTank->get_loadCellUnit() != $loadCellUnit) $updateSql .= ($updateSql!=""?",":"")."loadCellUnit = NULLIF('" . $mysqli->real_escape_string($loadCellUnit) . "', '')";
+	        if($gasTank->get_loadCellUpdateVariance() != $loadCellUpdateVariance) $updateSql .= ($updateSql!=""?",":"")."loadCellUpdateVariance = NULLIF('" . $mysqli->real_escape_string($loadCellUpdateVariance) . "', '')";
 	        if($updateSql != "")$sql = "UPDATE gasTanks SET ".$updateSql." WHERE id = " . $id;
 	    } else {
 	        $sql = "INSERT INTO gasTanks (id, loadCellCmdPin, loadCellRspPin, loadCellScaleRatio, loadCellTareOffset, loadCellUnit, loadCellUpdateVariance) VALUES(" .
-	   	        $id.", ".$loadCellCmdPin.", ".$loadCellRspPin.", ".$loadCellScaleRatio.", ".$loadCellTareOffset.", '".$loadCellUnit."', '".$loadCellUpdateVariance."' )";
+	   	        $id.", '".$mysqli->real_escape_string($loadCellCmdPin)."', '".$mysqli->real_escape_string($loadCellRspPin)."', '".$mysqli->real_escape_string($loadCellScaleRatio)."', '".$mysqli->real_escape_string($loadCellTareOffset)."', '".$mysqli->real_escape_string($loadCellUnit)."', '".$mysqli->real_escape_string($loadCellUpdateVariance)."' )";
 	    }
 	    if(isset($sql) && $sql != "")$ret = $ret && $this->executeQueryNoResult($sql);
 	    return $ret;
 	}
 	function set_GasTankTareRequested($id, $tare) {
 	    $ret = true;
+	    $id = (int) $id;
 	    $gasTank = $this->GetByID($id);
 	    $updateSql = "";
 	    if($tare){
