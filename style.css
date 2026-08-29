@@ -174,8 +174,17 @@ img {
   display: inline-block;
   background: transparent url(img/ratings_small_v3.png) center center no-repeat; }
   
+/* A text-shadow alone can't guarantee legible text over an arbitrary photo
+   background - a row sitting over a light part of the image needs a dark
+   shadow, but a row over an already-dark part gets no benefit from one.
+   Give every row a uniform dark scrim so contrast holds regardless of what
+   part of the background image is behind it; altrow layers on top of that
+   for the existing zebra-striping. */
+tbody tr {
+	background-color: rgba(0,0,0,.35);
+}
 .altrow{
-	background-color: rgba(153,153,153,.23);
+	background-color: rgba(0,0,0,.5);
 }
 
 .ibu{
