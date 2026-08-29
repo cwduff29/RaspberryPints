@@ -28,13 +28,18 @@ class KegManager extends Manager{
 	}	
 	
 	function Tap($tapId, $kegId, $beerId = null, $beerBatchId=null){
+		$tapId = (int) $tapId;
+		$kegId = (int) $kegId;
+		$beerId = $beerId ? (int) $beerId : null;
+		$beerBatchId = $beerBatchId ? (int) $beerBatchId : null;
 		$sql="UPDATE kegs k SET k.onTapId = NULL, k.kegStatusCode = 'NEEDS_CLEANING', modifiedDate = NOW() WHERE onTapId = $tapId";
 		$ret = $this->executeQueryNoResult($sql);
 		$sql="UPDATE kegs k SET k.onTapId = $tapId, k.kegStatusCode = 'SERVING'".($beerId?", k.beerId=$beerId":"").", k.beerBatchId=".($beerBatchId?"$beerBatchId":"0").", modifiedDate = NOW() WHERE id = $kegId";
 		$ret = $ret && $this->executeQueryNoResult($sql);
 		return $ret;
-	}	
+	}
 	function Kick($id){
+		$id = (int) $id;
 		$sql = "UPDATE kegs k SET k.kegStatusCode = 'NEEDS_CLEANING', k.onTapId = NULL WHERE id = $id";
 		return $this->executeQueryNoResult($sql);
 	}
@@ -47,7 +52,7 @@ class KegManager extends Manager{
 			$tapManager->Save($tap);			
 		}
 	
-		$sql="UPDATE kegs SET active = 0, onTapId = NULL WHERE id = $id";
+		$sql="UPDATE kegs SET active = 0, onTapId = NULL WHERE id = ".(int)$id;
 		return $this->executeQueryNoResult($sql);
 	}
 	

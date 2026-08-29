@@ -25,15 +25,16 @@ class FermentableManager extends Manager{
 	}	
 	
 	function GetByName($name){
-	    $sql="SELECT * FROM ".$this->getTableName()." WHERE name = '$name'";
+	    global $mysqli;
+	    $sql="SELECT * FROM ".$this->getTableName()." WHERE name = '".$mysqli->real_escape_string($name)."'";
 		return $this->executeQueryWithSingleResult($sql);
 	}
 	function GetAllForBeer($id){
-		$sql="SELECT * FROM ".$this->getTableName()." t left join beer".ucwords($this->getTableName())." tb on (t.id = tb.".$this->getTableName()."Id) WHERE tb.beerId = $id";
+		$sql="SELECT * FROM ".$this->getTableName()." t left join beer".ucwords($this->getTableName())." tb on (t.id = tb.".$this->getTableName()."Id) WHERE tb.beerId = ".(int)$id;
 		return $this->executeQueryWithResults($sql);
 	}
 	function GetDistinctForBeer($id){
-	    $sql="SELECT Distinct t.* FROM ".$this->getTableName()." t left join beer".ucwords($this->getTableName())." tb on (t.id = tb.".$this->getTableName()."Id) WHERE tb.beerId = $id";
+	    $sql="SELECT Distinct t.* FROM ".$this->getTableName()." t left join beer".ucwords($this->getTableName())." tb on (t.id = tb.".$this->getTableName()."Id) WHERE tb.beerId = ".(int)$id;
 	    return $this->executeQueryWithResults($sql);
 	}
 }

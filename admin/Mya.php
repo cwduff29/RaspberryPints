@@ -5,7 +5,7 @@ require_once __DIR__.'/header.php';
 <?php
 include 'top_menu.php';
 
-$sql="SELECT * FROM `users` WHERE id='$_SESSION[myuserid]'";
+$sql="SELECT * FROM `users` WHERE id=".(int)$_SESSION['myuserid'];
 /** @var mixed $mysqli */
 $result = $mysqli->query($sql);
 if($result) $user = $result->fetch_array();

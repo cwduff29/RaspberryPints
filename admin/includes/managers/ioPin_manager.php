@@ -33,7 +33,8 @@ class IoPinManager extends Manager{
 	    return $objArray;
 	}
 	function deleteShield($shield){
-	    $sql="DELETE FROM ioPins WHERE shield = '$shield'";
-	    return $this->executeQueryNoResult($sql);	    
+	    global $mysqli;
+	    $sql="DELETE FROM ioPins WHERE shield = '".$mysqli->real_escape_string($shield)."'";
+	    return $this->executeQueryNoResult($sql);
 	}
 }

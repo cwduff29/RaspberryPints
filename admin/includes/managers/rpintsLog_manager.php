@@ -27,13 +27,14 @@ class RPintsLogManager extends Manager{
 	}
 	function getLastLogMessagesFiltered($page, $limit, &$totalRows, $startTime, $endTime, $process, $category, $lastId = NULL, $lastDate = NULL){
 	    $sql="SELECT * FROM ".$this->getViewName()." ";
+	    global $mysqli;
 	    $where = "";
-	    if($startTime && $startTime != "" && $startTime != " ") $where = $where.($where != ""?"AND ":"")."modifiedDate >= '$startTime' ";
-	    if($endTime && $endTime != "" && $endTime != " ") $where = $where.($where != ""?"AND ":"")."modifiedDate < '$endTime' ";
-	    if($process)  $where = $where.($where != ""?"AND ":"")."process = '$process' ";
-	    if($category)  $where = $where.($where != ""?"AND ":"")."category = '$category' ";
-	    if($lastId)  $where = $where.($where != ""?"AND ":"")."id > '$lastId' ";
-	    if($lastDate)  $where = $where.($where != ""?($lastId?"OR ":"AND "):"")."modifiedDate > '$lastDate' ";
+	    if($startTime && $startTime != "" && $startTime != " ") $where = $where.($where != ""?"AND ":"")."modifiedDate >= '".$mysqli->real_escape_string($startTime)."' ";
+	    if($endTime && $endTime != "" && $endTime != " ") $where = $where.($where != ""?"AND ":"")."modifiedDate < '".$mysqli->real_escape_string($endTime)."' ";
+	    if($process)  $where = $where.($where != ""?"AND ":"")."process = '".$mysqli->real_escape_string($process)."' ";
+	    if($category)  $where = $where.($where != ""?"AND ":"")."category = '".$mysqli->real_escape_string($category)."' ";
+	    if($lastId)  $where = $where.($where != ""?"AND ":"")."id > ".(int)$lastId." ";
+	    if($lastDate)  $where = $where.($where != ""?($lastId?"OR ":"AND "):"")."modifiedDate > '".$mysqli->real_escape_string($lastDate)."' ";
 	    if($where != "") $sql = $sql."WHERE $where ";
 	    $sql = $sql."ORDER BY modifiedDate DESC, id DESC ";
 	    $totalRows = 0;

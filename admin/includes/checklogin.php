@@ -31,10 +31,10 @@ if($user){
 	}
 	else
 	{
-		echo "<script>location.href='".$_POST["jumpto"]."';</script>";
+		echo "<script>location.href=".json_encode($_POST["jumpto"]).";</script>";
 	}
 }
 else {
-    echo "<script>location.href='".("../index.php?wrong".(( isset($_POST["jumpto"]) && !empty($_POST["jumpto"]) )?"&ret=".$_POST["jumpto"]:""))."';</script>";
+    echo "<script>location.href=".json_encode("../index.php?wrong".(( isset($_POST["jumpto"]) && !empty($_POST["jumpto"]) )?"&ret=".urlencode($_POST["jumpto"]):"")).";</script>";
 }
 ?>

@@ -34,12 +34,13 @@ class PourManager extends Manager{
 	function getLastPoursFiltered($page, $limit, &$totalRows, $startTime, $endTime, $tapId, $beerId, $userId, $beerBatchId=null){
 		$sql="SELECT * FROM ".$this->getViewName()." ";
 		$where = "";
-		if($startTime && $startTime != "") $where = $where.($where != ""?"AND ":"")."createdDate >= '$startTime' ";
-		if($endTime && $endTime != "") $where = $where.($where != ""?"AND ":"")."createdDate < '$endTime' ";
-		if($tapId)  $where = $where.($where != ""?"AND ":"")."tapId = $tapId ";
-		if($beerId) $where = $where.($where != ""?"AND ":"")."beerId = $beerId ";
-		if($beerBatchId && $beerBatchId > 0) $where = $where.($where != ""?"AND ":"")."beerBatchId = $beerBatchId ";
-		if($userId) $where = $where.($where != ""?"AND ":"")."userId = $userId ";
+		global $mysqli;
+		if($startTime && $startTime != "") $where = $where.($where != ""?"AND ":"")."createdDate >= '".$mysqli->real_escape_string($startTime)."' ";
+		if($endTime && $endTime != "") $where = $where.($where != ""?"AND ":"")."createdDate < '".$mysqli->real_escape_string($endTime)."' ";
+		if($tapId)  $where = $where.($where != ""?"AND ":"")."tapId = ".(int)$tapId." ";
+		if($beerId) $where = $where.($where != ""?"AND ":"")."beerId = ".(int)$beerId." ";
+		if($beerBatchId && $beerBatchId > 0) $where = $where.($where != ""?"AND ":"")."beerBatchId = ".(int)$beerBatchId." ";
+		if($userId) $where = $where.($where != ""?"AND ":"")."userId = ".(int)$userId." ";
 		if($where != "") $sql = $sql."WHERE $where ";
 		$sql = $sql."ORDER BY createdDate DESC ";
 		$totalRows = 0;
@@ -80,13 +81,14 @@ class PourManager extends Manager{
 	    }
 	    $sql = $sql."FROM ".$this->getViewName().",(SELECT @row_number:=0) AS t ";
 	    $where = "";
-	    if($startTime && $startTime != "") $where = $where.($where != ""?"AND ":"")."createdDate >= '$startTime' ";
-	    if($endTime && $endTime != "") $where = $where.($where != ""?"AND ":"")."createdDate < '$endTime' ";
-	    if($tapId)  $where = $where.($where != ""?"AND ":"")."tapId = $tapId ";
-	    if($beerId) $where = $where.($where != ""?"AND ":"")."beerId = $beerId ";
-	    if($beerBatchId && $beerBatchId > 0) $where = $where.($where != ""?"AND ":"")."beerBatchId = $beerBatchId ";
-	    if($userId) $where = $where.($where != ""?"AND ":"")."userId = $userId ";
-	    if($style) $where = $where.($where != ""?"AND ":"")."beerStyle = '$style' ";
+	    global $mysqli;
+	    if($startTime && $startTime != "") $where = $where.($where != ""?"AND ":"")."createdDate >= '".$mysqli->real_escape_string($startTime)."' ";
+	    if($endTime && $endTime != "") $where = $where.($where != ""?"AND ":"")."createdDate < '".$mysqli->real_escape_string($endTime)."' ";
+	    if($tapId)  $where = $where.($where != ""?"AND ":"")."tapId = ".(int)$tapId." ";
+	    if($beerId) $where = $where.($where != ""?"AND ":"")."beerId = ".(int)$beerId." ";
+	    if($beerBatchId && $beerBatchId > 0) $where = $where.($where != ""?"AND ":"")."beerBatchId = ".(int)$beerBatchId." ";
+	    if($userId) $where = $where.($where != ""?"AND ":"")."userId = ".(int)$userId." ";
+	    if($style) $where = $where.($where != ""?"AND ":"")."beerStyle = '".$mysqli->real_escape_string($style)."' ";
 	    if($where != "") $sql = $sql."WHERE $where ";
 	    $sql = $sql."GROUP BY userName";
 	    if($groupBy) $sql = $sql.", ".$groupBy;
@@ -129,13 +131,14 @@ class PourManager extends Manager{
 	    }
 	    $sql = $sql."FROM ".$this->getViewName().",(SELECT @row_number:=0) AS t ";
 	    $where = "";
-	    if($startTime && $startTime != "") $where = $where.($where != ""?"AND ":"")."createdDate >= '$startTime' ";
-	    if($endTime && $endTime != "") $where = $where.($where != ""?"AND ":"")."createdDate < '$endTime' ";
-	    if($tapId)  $where = $where.($where != ""?"AND ":"")."tapId = $tapId ";
-	    if($beerId) $where = $where.($where != ""?"AND ":"")."beerId = $beerId ";
-	    if($beerBatchId && $beerBatchId > 0) $where = $where.($where != ""?"AND ":"")."beerBatchId = $beerBatchId ";
-	    if($userId) $where = $where.($where != ""?"AND ":"")."userId = $userId ";
-	    if($style) $where = $where.($where != ""?"AND ":"")."beerStyle = '$style' ";
+	    global $mysqli;
+	    if($startTime && $startTime != "") $where = $where.($where != ""?"AND ":"")."createdDate >= '".$mysqli->real_escape_string($startTime)."' ";
+	    if($endTime && $endTime != "") $where = $where.($where != ""?"AND ":"")."createdDate < '".$mysqli->real_escape_string($endTime)."' ";
+	    if($tapId)  $where = $where.($where != ""?"AND ":"")."tapId = ".(int)$tapId." ";
+	    if($beerId) $where = $where.($where != ""?"AND ":"")."beerId = ".(int)$beerId." ";
+	    if($beerBatchId && $beerBatchId > 0) $where = $where.($where != ""?"AND ":"")."beerBatchId = ".(int)$beerBatchId." ";
+	    if($userId) $where = $where.($where != ""?"AND ":"")."userId = ".(int)$userId." ";
+	    if($style) $where = $where.($where != ""?"AND ":"")."beerStyle = '".$mysqli->real_escape_string($style)."' ";
 	    if($where != "") $sql = $sql."WHERE $where ";
 	    $sql = $sql."GROUP BY tapNumber, tapId";
 	    if($groupBy) $sql = $sql.", ".$groupBy;
@@ -183,13 +186,14 @@ class PourManager extends Manager{
 	    }
 	    $sql = $sql."FROM ".$this->getViewName().",(SELECT @row_number:=0) AS t ";
 	    $where = "";
-	    if($startTime && $startTime != "") $where = $where.($where != ""?"AND ":"")."createdDate >= '$startTime' ";
-	    if($endTime && $endTime != "") $where = $where.($where != ""?"AND ":"")."createdDate < '$endTime' ";
-	    if($tapId)  $where = $where.($where != ""?"AND ":"")."tapId = $tapId ";
-	    if($beerId) $where = $where.($where != ""?"AND ":"")."beerId = $beerId ";
-	    if($beerBatchId && $beerBatchId > 0) $where = $where.($where != ""?"AND ":"")."beerBatchId = $beerBatchId ";
-	    if($userId) $where = $where.($where != ""?"AND ":"")."userId = $userId ";
-	    if($style) $where = $where.($where != ""?"AND ":"")."beerStyle = '$style' ";
+	    global $mysqli;
+	    if($startTime && $startTime != "") $where = $where.($where != ""?"AND ":"")."createdDate >= '".$mysqli->real_escape_string($startTime)."' ";
+	    if($endTime && $endTime != "") $where = $where.($where != ""?"AND ":"")."createdDate < '".$mysqli->real_escape_string($endTime)."' ";
+	    if($tapId)  $where = $where.($where != ""?"AND ":"")."tapId = ".(int)$tapId." ";
+	    if($beerId) $where = $where.($where != ""?"AND ":"")."beerId = ".(int)$beerId." ";
+	    if($beerBatchId && $beerBatchId > 0) $where = $where.($where != ""?"AND ":"")."beerBatchId = ".(int)$beerBatchId." ";
+	    if($userId) $where = $where.($where != ""?"AND ":"")."userId = ".(int)$userId." ";
+	    if($style) $where = $where.($where != ""?"AND ":"")."beerStyle = '".$mysqli->real_escape_string($style)."' ";
 	    if($where != "") $sql = $sql."WHERE $where ";
 	    $sql = $sql."GROUP BY ";
 	    if(!$groupBy || $groupBy != 'beerStyle'){
@@ -381,15 +385,17 @@ class PourManager extends Manager{
 	}
 	
 	function updatePour($id, $pourAmount, $pourAmountUnit, $conversion) {
+	    global $mysqli;
 	    $ret = true;
+	    $id = (int) $id;
 	    $sql="SELECT * FROM pours where id = $id";
 	    $pour = $this->executeQueryWithSingleResult($sql);
 	    unset($sql);
 	    $updateSql = "";
 	    if( $pour ){
-	        if($pour->get_conversion()   != $conversion) 	$updateSql .= ($updateSql!=""?",":"")."conversion = NULLIF('" . $conversion . "', '')";
-	        if($pour->get_amountPoured() != $pourAmount) 	$updateSql .= ($updateSql!=""?",":"")."amountPoured = NULLIF('" . $pourAmount . "', '')";
-	        if($pour->get_amountPouredUnit() != $pourAmountUnit) 	$updateSql .= ($updateSql!=""?",":"")."amountPouredUnit = NULLIF('" . $pourAmountUnit . "', '')";
+	        if($pour->get_conversion()   != $conversion) 	$updateSql .= ($updateSql!=""?",":"")."conversion = NULLIF('" . $mysqli->real_escape_string($conversion) . "', '')";
+	        if($pour->get_amountPoured() != $pourAmount) 	$updateSql .= ($updateSql!=""?",":"")."amountPoured = NULLIF('" . $mysqli->real_escape_string($pourAmount) . "', '')";
+	        if($pour->get_amountPouredUnit() != $pourAmountUnit) 	$updateSql .= ($updateSql!=""?",":"")."amountPouredUnit = NULLIF('" . $mysqli->real_escape_string($pourAmountUnit) . "', '')";
 	        if($updateSql != "")$sql = "UPDATE pours SET ".$updateSql." WHERE id = " . $id;
 	    }
 	    if(isset($sql) && $sql != "")$ret = $ret && $this->executeQueryNoResult($sql);

@@ -70,10 +70,11 @@ abstract class Manager {
 	}
 	
 	protected function getWhereClause($dbObject){
+		global $mysqli;
 		$where = "";
 		foreach($this->getPrimaryKeys() as $key){
 			if(strlen($where) > 0) $where.= ' AND ';
-			$where.= "$key = '".$dbObject->{'get_'.$key}()."'";
+			$where.= "$key = '".$mysqli->real_escape_string($dbObject->{'get_'.$key}())."'";
 		}
 		if(strlen($where) > 0) $where = 'WHERE '.$where;
 		return $where;

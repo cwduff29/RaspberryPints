@@ -43,17 +43,20 @@ class UserManager extends Manager{
 	}
 	
 	function ChangePassword($id, $password){
+		global $mysqli;
 		if($password)$password = md5($password);
+		$id = (int) $id;
 		$sql = 		"UPDATE users " .
 					"SET " .
-						"password =  NULLIF(MD5('$password'), ''), " .
+						"password =  NULLIF(MD5('".$mysqli->real_escape_string($password)."'), ''), " .
 						"modifiedDate = NOW() ".
-					"WHERE id = $id";	
+					"WHERE id = $id";
 		return $this->executeQueryNoResult($sql);
 	}
-	
+
 	function GetByUserName($userName){
-		$sql="SELECT * FROM users WHERE userName = '$userName'";
+		global $mysqli;
+		$sql="SELECT * FROM users WHERE userName = '".$mysqli->real_escape_string($userName)."'";
 		return $this->executeQueryWithSingleResult($sql);
 	}
 	
@@ -81,52 +84,57 @@ class UserManager extends Manager{
 	}
 	
 	function addRFID($userId, $rfid, $desc){
+		global $mysqli;
 		$sql = 	"INSERT IGNORE INTO userRfids(userId, RFID, description ) " .
-					"VALUES(" . 
-					"'" . $userId . "', " .
-					"'" . $rfid . "', " .
-					"'" . $desc . "' " .
+					"VALUES(" .
+					"'" . (int) $userId . "', " .
+					"'" . $mysqli->real_escape_string($rfid) . "', " .
+					"'" . $mysqli->real_escape_string($desc) . "' " .
 					")";
-				
+
 		return $this->executeQueryNoResult($sql);
 	}
 
 	function deleteRFID($userId, $rfid){
+		global $mysqli;
 		$sql = 	"DELETE FROM userRfids WHERE " .
-					"userId = '" . $userId . "' AND " .
-					"RFID = '" . $rfid . "'";
-				
+					"userId = '" . (int) $userId . "' AND " .
+					"RFID = '" . $mysqli->real_escape_string($rfid) . "'";
+
 		return $this->executeQueryNoResult($sql);
 	}
 
-	function deleteUserRFID($userId){		
+	function deleteUserRFID($userId){
 		$sql = 	"DELETE FROM userRfids WHERE " .
-					"userId = '" . $userId . "' ".
+					"userId = '" . (int) $userId . "' ".
 					";";
 		return $this->executeQueryNoResult($sql);
 	}
-	
+
 	function saveRFID($userId, $rfid, $desc){
-		$sql = 	"UPDATE userRfids SET userId = '" . $userId . "', description = '" . $desc . "' " .
+		global $mysqli;
+		$sql = 	"UPDATE userRfids SET userId = '" . (int) $userId . "', description = '" . $mysqli->real_escape_string($desc) . "' " .
 					"WHERE " .
-					"RFID = '" . $rfid . "'";
-				
+					"RFID = '" . $mysqli->real_escape_string($rfid) . "'";
+
 		return $this->executeQueryNoResult($sql);
 	}
-	
+
 	function getByRFID($rfid){
 		$rfid = preg_replace('/\D/', '', $rfid);
 		$sql="SELECT u.* FROM users u left join userRfids rfid ON (u.id = rfid.userid) WHERE rfid = $rfid";
 		return $this->executeQueryWithSingleResult($sql);
 	}
-	
+
 	function getRFIDCount($id){
+		$id = (int) $id;
 		$sql="SELECT COUNT(*) FROM userRfids WHERE userId = $id";
 		$count =  $this->executeNonObjectQueryWithSingleResults($sql);
 		return $count[0];
 	}
-	
+
 	function getRFIDByUserId($id){
+		$id = (int) $id;
 		$sql="SELECT * FROM userRfids WHERE userId = $id";
 		return $this->executeNonObjectQueryWithArrayResults($sql);
 	}

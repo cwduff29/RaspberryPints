@@ -15,7 +15,7 @@ if( isset($_GET['tapId'])){
 	redirect('../../index.php');
 } else if( isset($_GET['bottleId'])){
   echo 'Drank';
-  $bottleId = $_GET["bottleId"];
+  $bottleId = (int) $_GET["bottleId"];
   $sql = "UPDATE bottles SET currentAmount = currentAmount-1  where id=" . $bottleId . ";";
   /** @var mixed $mysqli **/
   $mysqli->query($sql);

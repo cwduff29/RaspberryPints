@@ -20,13 +20,14 @@ class SrmManager extends Manager{
 		return "ORDER BY srm";
 	}
 	public function getBySRM($srm){
-	    $sql="SELECT * FROM ".$this->getViewName()." WHERE srm = ".$srm;
+	    $sql="SELECT * FROM ".$this->getViewName()." WHERE srm = ".(float)$srm;
 	    $results = $this->executeQueryWithResults($sql);
 	    if( $results && count($results) > 0 ) return array_values($results)[0];
 	    return null;
 	}
 	public function getByRGB($rgb){
-	    $sql="SELECT * FROM ".$this->getViewName()." WHERE rgb = ".$rgb;
+	    global $mysqli;
+	    $sql="SELECT * FROM ".$this->getViewName()." WHERE rgb = '".$mysqli->real_escape_string($rgb)."'";
 	    $results = $this->executeQueryWithResults($sql);
 	    if( $results && count($results) > 0 ) return array_values($results)[0];
 	    return null;

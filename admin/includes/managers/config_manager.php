@@ -37,7 +37,7 @@
 	{
 	    global $mysqli;
 	    $ret = null;
-	    $sql="SELECT * FROM config WHERE configName ='".$configName."'";
+	    $sql="SELECT * FROM config WHERE configName ='".$mysqli->real_escape_string($configName)."'";
 	    $qry=$mysqli->query($sql);
 	    if($c = $qry->fetch_array()){
 	        $ret = $c;
@@ -48,7 +48,7 @@
 	{
 		global $mysqli;
 		$ret = null;
-		$sql="SELECT configValue FROM config WHERE configName ='".$configName."'";
+		$sql="SELECT configValue FROM config WHERE configName ='".$mysqli->real_escape_string($configName)."'";
 		$qry=$mysqli->query($sql);
 		if($c = $qry->fetch_array()){
 			$ret = $c['configValue'];
@@ -81,11 +81,13 @@
 	function saveConfigValue($configName, $configValue, $insert = false)
 	{
 	    global $mysqli;
-	    $sql="UPDATE config set configValue='".$configValue."', modifiedDate = NOW() WHERE configName ='".$configName."'";
+	    $escConfigName = $mysqli->real_escape_string($configName);
+	    $escConfigValue = $mysqli->real_escape_string($configValue);
+	    $sql="UPDATE config set configValue='".$escConfigValue."', modifiedDate = NOW() WHERE configName ='".$escConfigName."'";
 	    if($insert){
 	        $existVal = getConfigValue($configName);
 	        if(!$existVal || $existVal === null){
-	            $sql="INSERT INTO config (configName, configValue, displayName, showOnPanel, createdDate, modifiedDate) VALUES('".$configName."', '".$configValue."', '".$configName."', 0, NOW(), NOW())";
+	            $sql="INSERT INTO config (configName, configValue, displayName, showOnPanel, createdDate, modifiedDate) VALUES('".$escConfigName."', '".$escConfigValue."', '".$escConfigName."', 0, NOW(), NOW())";
 	        }
 	    }
 	    return $mysqli->query($sql);
@@ -109,18 +111,18 @@
 	{
 	    global $mysqli;
 	    $config = array();
-	    $sql = "SELECT * FROM config WHERE configName LIKE '$name'";
+	    $sql = "SELECT * FROM config WHERE configName LIKE '".$mysqli->real_escape_string($name)."'";
 	    $qry = $mysqli->query($sql);
 	    while($c = $qry->fetch_array()){
 	        $config[$c['configName']] = $c['configValue'];
 	    }
 	    return $config;
 	}
-	
+
 	function getConfigByName($name)
 	{
 	    global $mysqli;
-	    $sql = "SELECT * FROM config WHERE configName LIKE '$name'";
+	    $sql = "SELECT * FROM config WHERE configName LIKE '".$mysqli->real_escape_string($name)."'";
 	    return $mysqli->query($sql);
 	}
 ?>

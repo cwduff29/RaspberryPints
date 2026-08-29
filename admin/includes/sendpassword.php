@@ -1,25 +1,12 @@
 <?php
 session_start();
-require 'conn.php';
 
-// Get values from form 
-$password=md5($_POST['password']);
-$email=($_POST['email']);
-	
-// update data in mysql database
-$sql="UPDATE users SET password='$password' WHERE email='$email'";
-/** @var mixed $mysqli **/
-$result=$mysqli->query($sql);
+// This previously reset a user's password to an attacker-chosen value for any
+// known email address with no proof of ownership (no emailed token, no current
+// password check) - a full account-takeover vulnerability. Self-service reset
+// via this form is disabled until it is rebuilt with real email verification.
+// Passwords can still be changed by a logged-in admin from the Users screen.
+echo "Self-service password reset is disabled. Please contact an administrator to reset your password.";
+echo "<BR><a href='../index.php'>Back to login</a>";
+?>
 
-// if successfully updated.
-if($result){
-echo "Successful";
-echo "<BR>";
-echo "<script>location.href='../index.php';</script>";
-}
-
-else {
-echo "ERROR";
-}
-
-?> 
