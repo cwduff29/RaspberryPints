@@ -88,7 +88,7 @@
     			            if($config[ConfigNames::UsePlaatoTemp])
     			            {
     			                $tempInfo["tempUnit"] = (strpos($plaatoValue,"C")?UnitsOfMeasure::TemperatureCelsius:UnitsOfMeasure::TemperatureFahrenheight);
-    			                $tempInfo["temp"] = substr($plaatoValue, 0, strpos($plaatoValue, '°'));
+    			                $tempInfo["temp"] = substr($plaatoValue, 0, strpos($plaatoValue, 'ï¿½'));
     			                $tempInfo["probe"] = $b['id'];
     			                $tempInfo["takenDate"] = date('Y-m-d H:i:s');
     			                array_push($plaatoTemps, $tempInfo);
@@ -173,10 +173,10 @@
 		<title>RaspberryPints</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 		<!-- Set location of Cascading Style Sheet -->
-		<link rel="stylesheet" type="text/css" href="style.css">
-		
+		<link rel="stylesheet" type="text/css" href="style.css?v=<?php echo @filemtime(__DIR__.'/style.css'); ?>">
+
 		<?php if($config[ConfigNames::UseHighResolution]) { ?>
-			<link rel="stylesheet" type="text/css" href="style-high-res.css">
+			<link rel="stylesheet" type="text/css" href="style-high-res.css?v=<?php echo @filemtime(__DIR__.'/style-high-res.css'); ?>">
 		<?php } ?>
 		
 		<?php	
