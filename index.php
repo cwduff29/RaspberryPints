@@ -172,6 +172,14 @@
 	<head>
 		<title>RaspberryPints</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<!-- Belt-and-suspenders refresh: the onload handler below schedules the
+		     real reload via JS, but a kiosk browser's renderer process can be
+		     killed/restarted (e.g. a GPU process crash on constrained hardware)
+		     without the page ever re-navigating, silently losing that JS timer
+		     and leaving the display frozen on stale data indefinitely. A plain
+		     meta refresh doesn't depend on any JS state surviving, so it still
+		     fires even if that happens. -->
+		<meta http-equiv="refresh" content="60">
 		<!-- Set location of Cascading Style Sheet -->
 		<link rel="stylesheet" type="text/css" href="style.css?v=<?php echo @filemtime(__DIR__.'/style.css'); ?>">
 
