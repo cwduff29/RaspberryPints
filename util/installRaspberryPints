@@ -1686,9 +1686,15 @@ configureMonitor(){
 		fi
 		
 		sed -i -E 's/^\s*(@chromium.*)/#\1/g' $START_CONFIG_FILE
-		if promptYN "Do you want to start with Chromium in Kiosk Mode?" "Y"; 
+		if promptYN "Do you want to start with Chromium in Kiosk Mode?" "Y";
 		then
-			echo '@chromium --kiosk localhost' >> $START_CONFIG_FILE
+			# The chromium binary/package was renamed from "chromium-browser" to
+			# "chromium" starting with Pi OS Bookworm; older releases (Buster,
+			# Bullseye) still ship it as "chromium-browser". Detect whichever is
+			# actually installed rather than hardcoding one name.
+			CHROMIUM_CMD="chromium-browser"
+			command -v chromium-browser >/dev/null 2>&1 || CHROMIUM_CMD="chromium"
+			echo "@${CHROMIUM_CMD} --kiosk --noerrdialogs --disable-infobars --disable-session-crashed-bubble --disable-translate --disable-features=TranslateUI --overscroll-history-navigation=0 localhost" >> $START_CONFIG_FILE
 		fi
 	fi
 	 
@@ -1735,11 +1741,13 @@ EOF
 	if promptYN "Restarted needed to use alamode. Restart Now?" "Y"; then
 		reboot
 	fi
+	CHROMIUM_CMD="chromium-browser"
+	command -v chromium-browser >/dev/null 2>&1 || CHROMIUM_CMD="chromium"
 	if promptYN "Open RaspberryPints" "Y"; then
-		su pi chromium http://localhost
+		su pi "$CHROMIUM_CMD" http://localhost
 	fi
 	if promptYN "Open RaspberryPints Admin?" "Y"; then
-		su pi chromium http://localhost/admin/index.php
+		su pi "$CHROMIUM_CMD" http://localhost/admin/index.php
 	fi
 }
 
